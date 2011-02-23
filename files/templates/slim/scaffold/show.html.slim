@@ -1,0 +1,13 @@
+p#notice = notice
+h2 Detalles del <%= singular_table_name %>
+
+.show
+  <% for attribute in attributes -%>
+  dl
+    dt <%= attribute.human_name %>:
+    dd = @<%= singular_table_name %>.<%= attribute.name %>
+  <% end -%>
+
+= link_to 'Editar', edit_<%= singular_table_name %>_path(@<%= singular_table_name %>), :class => 'edit_btn'
+= link_to 'Volver', <%= index_helper %>_path, :class => 'back_btn'
+

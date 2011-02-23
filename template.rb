@@ -71,7 +71,8 @@ gem 'will_paginate', '~> 3.0.pre2'
 say ">> Se agrega soporte de meta_search", :blue
 gem 'meta_search'
 
-#gem("rspec-rails", :group => "test")
+gem "rspec-rails", :group => "test, development", :version => "~> 2.4"
+generate "rspec:install"
 #gem("cucumber-rails", :group => "test")
 
 #if yes?("Would you like to install Devise?")

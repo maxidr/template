@@ -1,15 +1,15 @@
 <p id="notice"><%%= notice %></p>
-<h2>Detalles del usuario</h2>
+<h2>Detalles del <%= singular_table_name %></h2>
 
+<div class="show">
+  <% for attribute in attributes -%>
+  <dl>
+    <dt><%= attribute.human_name %></dt>
+    <dd><%%= @<%= singular_table_name %>.<%= attribute.name %> %></dd>
+  </dl>
+  <% end -%>
+</div>
 
-<% for attribute in attributes -%>
-<dl>
-  <dt><%= attribute.human_name %></dt>
-  <dd><%%= @<%= singular_table_name %>.<%= attribute.name %> %></dd>
-</dl>
-<% end -%>
-
-
-<%%= link_to 'Editar', edit_<%= singular_table_name %>_path(@<%= singular_table_name %>), :class => 'edit btn' %>
-<%%= link_to 'Volver', <%= index_helper %>_path, :class => 'back btn' %>
+<%%= link_to 'Editar', edit_<%= singular_table_name %>_path(@<%= singular_table_name %>), :class => 'edit_btn' %>
+<%%= link_to 'Volver', <%= index_helper %>_path, :class => 'back_btn' %>
 

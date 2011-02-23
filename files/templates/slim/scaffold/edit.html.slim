@@ -1,0 +1,7 @@
+h1 Editar <%= singular_table_name %>
+
+== render 'form'
+
+= link_to 'Ver', @<%= singular_table_name %>, :class => 'edit_btn'
+= link_to 'Volver', <%= index_helper %>_path, :class => 'back_btn'
+
