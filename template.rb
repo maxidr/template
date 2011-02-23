@@ -1,28 +1,41 @@
 remove_file "public/index.html"
 #route("root :to => 'usuarios#index'")
 
-# Reemplazo de prototype por jquery
-say ">> Reemplazando prototype por jquery (se agrega soporte de jquery-ui)", :blue
-gem 'jquery-rails', '>= 0.2.6'
-generate 'jquery:install --ui -f'
-application "config.action_view.javascript_expansions[:defaults] = %w(jquery.min jquery-ui.min rails)"
-
 say ">> Se modifica el archivo inflections para que se pluralize/singularize en castellano", :blue
 copy_file "#{File.dirname(__FILE__)}/files/inflections.rb", "config/initializers/inflections.rb", :force => true
 
 say ">> Se agregan los templates de generación de scaffold modificados", :blue
 directory "#{File.dirname(__FILE__)}/files/templates", 'lib/templates'
 
-say ">> Se agrega archivo para internacionalización del proyecto (I18N)"
+say ">> Se agrega archivo para internacionalización del proyecto (I18N)", :blue
 copy_file "#{File.dirname(__FILE__)}/files/locales/es-AR.yml", 'config/locales/es-AR.yml'
 copy_file "#{File.dirname(__FILE__)}/files/locales/devise.es-AR.yml", 'config/locales/devise.es-AR.yml'
 application "config.i18n.default_locale = 'es-AR'"
 
-say ">> Se configura el time_zone de Buenos Aires"
+say ">> Se configura el time_zone de Buenos Aires", :blue
 application "config.time_zone = 'America/Buenos_Aires'"
 
-say ">> Se agrega soporte de devise", :blue
+say ">> Actualizando e instalando dependencias (bundles)", :blue
+gem 'jquery-rails', '>= 0.2.6'
 gem 'devise'
+gem 'cancan'
+gem 'formtastic', :version => "~> 1.2.3"
+#if yes?("Desea agregar soporte de slim template engine (http://slim-lang.com/) [y/N]?")
+  gem 'slim', :require => 'slim/rails'
+#  gem 'slim-rails'
+#end
+gem 'will_paginate', '~> 3.0.pre2'
+gem 'meta_search'
+gem "rspec-rails", :group => [:test, :development], :version => "~> 2.4"
+run 'bundle install'
+
+
+# Reemplazo de prototype por jquery
+say ">> Reemplazando prototype por jquery (se agrega soporte de jquery-ui)", :blue
+generate 'jquery:install --ui -f'
+application "config.action_view.javascript_expansions[:defaults] = %w(jquery.min jquery-ui.min rails)"
+
+say ">> Se configura devise", :blue
 generate "devise:install"
 #generate "scaffold Usuario nombre:string apellido:string email:string"
 generate "devise Usuario nombre:string apellido:string email:string"
@@ -38,14 +51,14 @@ usr = Usuario.create({:nombre => 'Guest', :apellido => 'Guest',
 end
 RUBY
 
-say ">> Se agrega soporte de cancan", :blue
-gem 'cancan'
+say ">> Se configura cancan", :blue
 file 'app/models/ability.rb', <<-RUBY
 # coding: utf-8
 class Ability
 	include	CanCan::Ability
 
 	def initialize(usuario)
+	  can :manage, :all
 #		can :read, :all
 #		cannot :write, :all
 #   alias_action [:index, :show, :search, :recent, :popular], :to => :coolread
@@ -56,22 +69,10 @@ RUBY
 say ">> Se customiza el applications_controller", :blue
 copy_file "#{File.dirname(__FILE__)}/files/application_controller.rb", "app/controllers/application_controller.rb", :force => true
 
-say ">> Se agrega soporte de formtastic", :blue
-gem 'formtastic', :version => "~> 1.2.3"
+say ">> Se configura formtastic", :blue
 generate "formtastic:install"
 
-if yes?("Desea agregar soporte de slim template engine (http://slim-lang.com/) [y/N]?")
-  gem 'slim', :require => 'slim/rails'
-  gem 'slim-rails'
-end
-
-say ">> Se agrega soporte de will_paginate", :blue
-gem 'will_paginate', '~> 3.0.pre2'
-
-say ">> Se agrega soporte de meta_search", :blue
-gem 'meta_search'
-
-gem "rspec-rails", :group => "test, development", :version => "~> 2.4"
+say ">> Se configura rspec"
 generate "rspec:install"
 #gem("cucumber-rails", :group => "test")
 
